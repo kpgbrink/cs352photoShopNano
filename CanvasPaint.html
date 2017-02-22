@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>CanvasPaint 352</title>
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">  <!-- Use Chrome plugin for IE if installed -->
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+  <link rel="stylesheet" type="text/css" href="CanvasPaint.css" />
+  <link rel="stylesheet" type="text/css" href="https://cs.calvin.edu/curriculum/cs/352/files/js/picker/colorPicker.css" /> 
+  <link rel="stylesheet" type="text/css" href="https://cs.calvin.edu/curriculum/cs/352/files/js/clickmenu.css" />
+</head>
+<body>
+  <div id="mainWindow">
+    <h3 class="titleBar">CanvasPaint 352</h3>
+
+    <ul id="mainmenu">
+      <li>File
+        <ul>
+          <li id="menuNew">New</li>
+          <li id="menuOpen">Open</li>
+          <li id="menuSave">Save</li>
+        </ul>
+      </li>
+      <li>Edit
+        <ul>
+          <li id="menuClear">Clear</li>
+        </ul>
+      </li>
+      <li>Tool
+        <ul>
+          <li id="menuMarker">Marker</li>
+          <li id="menuLine">Line</li>
+          <li id="menuRect">Rectangle</li>
+          <li id="menuEraser">Eraser</li>
+        </ul>
+      </li>
+      <li>Image
+        <ul>
+          <li id="menuFade">Fade</li>
+          <li id="menuUnfade">Unfade</li>
+        </ul>
+      </li>
+    </ul>
+
+    <div id="toolBar">
+      <div id="tools">
+        <div  class="toolbarCell radio1 selected" id="markerButton">&nbsp;</div>
+        <div  class="toolbarCell radio1" id="lineButton">&nbsp;</div>
+        <div  class="toolbarCell radio1" id="rectButton">&nbsp;</div>
+        <div  class="toolbarCell radio1" id="eraserButton">&nbsp;</div>
+        <div  class="toolbarCell" id="colorPicker">
+          <input id="color1" type="text" name="color1" value="#333399" />
+        </div>
+        <div  class="toolbarCell" id="width">
+          <input type="range" id="widthSlider" min="1" max="40" value="12" />
+        </div>
+        <div  class="toolbarCell" id="clearButton">&nbsp;</div>
+      </div>
+
+    </div>
+
+    <canvas id="canvas1" width="595" height="351">
+      <p>Your browser doesn't support the HTML5 canvas element.</p>
+   </canvas>
+  </div>
+
+  <div id="messageWindow">
+    <h3 class="titleBar">Messages</h3>
+    <div id="messages"></div>
+  </div>
+
+  <div id="fileInput">
+    <p class="closeBox" id="closeBox1">X<p>
+    <p id="filePrompt">To load an image, type in a URL:</p>
+    <input type="text" size="60" id="file1" />
+  </div>
+
+  <div id="saveWindow">
+    <div id="savePane">
+      <p class="closeBox" id="closeBox2">X<p>
+      <img id="saveImg" width="595" height="351">
+      <p id="closeMsg">Right-click image to save</p>
+    </div>
+  </div>
+
+
+  <!-- javascript, loaded at the end to make the page appear faster -->
+  <script type="text/javascript" src="https://cs.calvin.edu/curriculum/cs/352/files/js/jquery-1.4.4.min.js"></script>
+  <script type="text/javascript" src="https://cs.calvin.edu/curriculum/cs/352/files/js/picker/jquery.colorPicker.js"></script>
+  <script type="text/javascript" src="https://cs.calvin.edu/curriculum/cs/352/files/js/jquery.clickmenu.js"></script>
+  <script type="text/javascript" src="CanvasPaint.js"></script>
+</body>
+</html>

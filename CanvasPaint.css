@@ -1,0 +1,183 @@
+body {
+    background-color:#6AF;
+}
+
+#mainWindow {
+    background-color:#ddd;
+    width:500pt;
+    height:300pt;
+    margin-top:18pt;
+    margin-left:18pt;
+    border: solid #ddd 2px; 
+    -webkit-box-shadow: 5pt 5pt 10pt #666;
+    -moz-box-shadow: 5pt 5pt 10pt #666;
+}
+
+.titleBar {
+    text-align:center;
+    font-family:arial;
+    font-size:12pt;
+    background-color:#333399;
+    color:white;
+    margin-top:0;
+    margin-bottom:0pt;
+    padding:2pt;
+}
+
+#toolBar {
+    display:none;		/* hide it while it is being generated */
+    background-color:#ddd;
+    border: solid #ccc 2pt;
+    border-top:0pt;
+    width:41pt;
+    height:258pt;
+    -webkit-box-shadow: 1pt 1pt 1pt #999;
+    -moz-box-shadow: 1pt 1pt 1pt #999;
+    padding: 3pt;
+}
+
+/* the drawing canvas */
+#canvas1 { 
+    position:absolute;
+    left:78pt;
+    top:56pt;
+    background-color:white;
+}
+
+#tools {
+    margin-top:12pt;
+    margin-left:2pt;
+}
+
+.toolbarCell {
+    background-color:#ddd;
+    width:20pt;
+    height:20pt;
+    margin:0pt;
+    margin-top:-1pt;
+    margin-left:2pt;
+    padding:6pt;
+    border: solid #eee 2px;
+    -webkit-box-shadow:2px 2px 2px #666;
+    -moz-box-shadow:2px 2px 2px #666;
+}
+
+
+.toolbarCell:hover {
+    -webkit-box-shadow:-2px -2px 2px #666;
+    -moz-box-shadow:-2px -2px 2px #666;
+}
+
+.toolbarCell:active {
+    border: solid #000 2px;
+}
+
+#markerButton { 
+    background: url(http://cs.calvin.edu/curriculum/cs/352/files/img/paintbrush.png) no-repeat center center; 
+}
+#lineButton { 
+    background: url(http://cs.calvin.edu/curriculum/cs/352/files/img/draw-line.png) no-repeat center center; 
+}
+#rectButton { 
+    background: url(http://cs.calvin.edu/curriculum/cs/352/files/img/rectangle.png) no-repeat center center; 
+}
+#eraserButton { 
+    background: url(http://cs.calvin.edu/curriculum/cs/352/files/img/Eraser-2-icon.png) no-repeat center center; 
+}
+#clearButton { 
+    background: url(http://cs.calvin.edu/curriculum/cs/352/files/img/trashcan.png) no-repeat center center; 
+}
+
+.selected {
+    -webkit-box-shadow: inset 2px 2px 2px #666;
+    -moz-box-shadow: inset 2px 2px 2px #666;
+}
+
+#widthSlider {
+    position:relative;
+    width:35px;
+    top:16px;
+    left:-4pt;
+}
+
+/* box for debugging output */
+#messageWindow {
+    border: solid black 1px;
+    margin-left:20pt;
+    margin-top: 18pt;
+    width: 500pt;
+    height: 100pt;
+    background-color:#FF9;
+    overflow: auto;
+}
+
+#messages {
+    padding:4pt;
+    font-size:75%;
+    font-family:courier;
+    overflow: auto;
+}
+
+#fileInput {
+    display:none;
+    z-index:2;
+    overflow:hidden;
+    position:absolute;
+    top:70pt;
+    left:90pt;
+    background-color:#ffd;
+    border: solid gray 2px;
+    -webkit-box-shadow: 5px 5px 5px #666;
+    -moz-box-shadow: 5px 5px 5px #666;
+}
+
+.closeBox {
+    float:right;
+    font-family:Arial;
+    margin:0pt;
+    background-color:gray;
+    border:solid black 1px;
+    color:white;
+    padding: 2pt;
+    margin:2pt;
+}
+
+#filePrompt {
+    font-family:Arial;
+    margin:12pt;
+}
+
+#file1 {
+    margin:12pt;
+    margin-top:0pt;
+}
+
+#saveWindow {
+    display:none;
+    background-color:#ffd;
+    position:absolute;
+    border:solid black 1px;
+    top:38pt;
+    left:38pt;
+    -webkit-box-shadow: 5px 5px 5px #999;
+    -moz-box-shadow: 5px 5px 5px #999;
+}
+
+#savePane {
+    width:630;
+    height:440;
+    border:solid gray 1pt;
+}
+
+#saveImg {
+    border:solid gray 1pt;
+    background-color:white;
+    margin:12pt;
+}
+
+#closeMsg {
+    font-family:arial;
+    position:relative;
+    top:-12pt;
+    left:12pt;
+}
