@@ -74,6 +74,8 @@ cpaint.drawStart = function(ev) {
   cpaint.y = ev.pageY - $(cpaint.canvas).offset().top;
   ev.preventDefault();
     
+  cpaint.drawing = true;
+    
   switch(cpaint.tool) {
       case 'marker':
           cpaint.markerStart();
@@ -88,10 +90,7 @@ cpaint.drawStart = function(ev) {
           cpaint.eraserStart();
           break;
   }
-  var x, y; 				// convert event coords to (0,0) at top left of canvas
 }
-
-
 
 /*
  * handle mouseup events
@@ -104,10 +103,13 @@ cpaint.drawEnd = function(ev) {
  * handle mousemove events
  */
 cpaint.draw = function(ev) {
+  if (!cpaint.drawing) {
+      return;
+  }
+    
   cpaint.x = ev.pageX - $(cpaint.canvas).offset().left;
   cpaint.y = ev.pageY - $(cpaint.canvas).offset().top;
   ev.preventDefault();
-    
     
   switch(cpaint.tool) {
       case 'marker':
@@ -127,30 +129,85 @@ cpaint.draw = function(ev) {
   cpaint.oldY = cpaint.y;
 } 
 
+cpaint.drawLine = function (beginX, beginY, endX, endY) {
+    cpaint.cx.beginPath();			// draw initial stroke
+    cpaint.cx.moveTo(beginX,beginY);
+    cpaint.cx.lineTo(endX,endY);
+    cpaint.cx.lineCap = 'round';
+    cpaint.cx.stroke();
+}
 
-cpaint.markerStart = function() {
-  cpaint.drawing = true;			// go into drawing mode
+
+// Marker
+cpaint.markerStart = function(color=null) {
   cpaint.oldX = cpaint.x;
   cpaint.oldY = cpaint.y;
   cpaint.cx.lineWidth = cpaint.lineThickness;
-  cpaint.cx.strokeStyle = cpaint.color;
-  cpaint.imgData = cpaint.cx.getImageData(0, 0, cpaint.canvas.width, cpaint.canvas.height);
-  						// save drawing window contents
-  cpaint.cx.beginPath();			// draw initial point
-  cpaint.cx.moveTo(cpaint.x-1,cpaint.y-1);
-  cpaint.cx.lineTo(cpaint.x,cpaint.y);
-  cpaint.cx.stroke();
+  cpaint.cx.strokeStyle = color?color:cpaint.color;
+  
+  cpaint.marker();
 }
 
 cpaint.marker = function() {
-  if (cpaint.drawing) {
-    cpaint.cx.beginPath();			// draw initial stroke
-    cpaint.cx.moveTo(cpaint.oldX,cpaint.oldY);
-    cpaint.cx.lineTo(cpaint.x,cpaint.y);
-    cpaint.cx.lineCap = 'round';
-    cpaint.cx.stroke();
-  }
+    cpaint.drawLine(cpaint.oldX, cpaint.oldY, cpaint.x, cpaint.y);
 }
+
+
+// Eraser uses marker and just changes the color.
+cpaint.eraserStart = function () {
+    cpaint.markerStart('#ffffff');
+}
+
+cpaint.eraser = function() {
+    cpaint.marker();
+}
+
+// Line
+cpaint.lineStart = function() {
+   cpaint.createObject();
+   cpaint.imgData = cpaint.cx.getImageData(0, 0, cpaint.canvas.width, cpaint.canvas.height);
+  						// save drawing window contents
+   cpaint.markerStart();
+}
+
+cpaint.line = function() {
+    cpaint.newObject.endPos = {x: cpaint.x, y: cpaint.y};
+    // save the image and draw the line.
+    cpaint.cx.putImageData(cpaint.imgData, 0, 0);
+    cpaint.drawLine(cpaint.newObject.startPos.x, cpaint.newObject.startPos.y,
+                   cpaint.newObject.endPos.x, cpaint.newObject.endPos.y);
+}
+
+// Rect
+cpaint.rectStart = function() {
+    cpaint.createObject();
+    cpaint.imgData = cpaint.cx.getImageData(0, 0, cpaint.canvas.width, cpaint.canvas.height);
+    cpaint.cx.strokeStyle = cpaint.color;
+    cpaint.cx.fillStyle = cpaint.color;
+    cpaint.cx.lineWidth = 1;
+    
+    cpaint.rect();
+}
+
+cpaint.rect = function() {
+    cpaint.newObject.endPos = {x: cpaint.x, y: cpaint.y};
+    cpaint.cx.putImageData(cpaint.imgData, 0, 0);
+    
+    console.log(cpaint.newObject);
+    cpaint.cx.beginPath();
+    cpaint.cx.rect(cpaint.newObject.startPos.x, cpaint.newObject.startPos.y, 
+                   cpaint.newObject.endPos.x - cpaint.newObject.startPos.x ,
+                   cpaint.newObject.endPos.y - cpaint.newObject.startPos.y);
+    cpaint.cx.fill();
+    cpaint.cx.stroke();
+}
+
+cpaint.createObject = function () {
+    cpaint.newObject = {};
+    cpaint.newObject.startPos = {x: cpaint.x, y: cpaint.y};
+    cpaint.newObject.endPos = {x: cpaint.x, y: cpaint.y};
+}
+
 
 /*
  * clear the canvas, offscreen buffer, and message box
