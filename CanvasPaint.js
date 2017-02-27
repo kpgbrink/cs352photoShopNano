@@ -18,7 +18,16 @@ cpaint.init = function () {
   cpaint.canvas  = $('#canvas1')[0];
   cpaint.cx = cpaint.canvas.getContext('2d');
   cpaint.imgData = cpaint.cx.getImageData(0, 0, cpaint.canvas.width, cpaint.canvas.height);
-  					// create offscreen copy of canvas in an image
+    
+  // change css for buttons to make clicks look good  
+  $('#markerButton, #menuMarker').bind('click', {tool:"marker"}, cpaint.selectTool);
+  $('#lineButton, #menuLine').bind('click', {tool:"line"}, cpaint.selectTool);
+  $('#rectButton, #menuRect').bind('click', {tool:"rect"}, cpaint.selectTool);
+  $('#eraserButton, #menuEraser').bind('click', {tool:"eraser"}, cpaint.selectTool);
+  //$('#colorPicker').bind('click', {tool:"marker"}, cpaint.selectTool);
+  //$('#clearButton').bind('click', {tool:"clear"}, cpaint.selectTool);
+    
+  // create offscreen copy of canvas in an image
 
   // bind functions to events, button clicks
   $(cpaint.canvas).bind('mousedown', cpaint.drawStart);
@@ -27,38 +36,62 @@ cpaint.init = function () {
   $('#color1').bind('change', cpaint.colorChange);
   $('#color1').colorPicker();			// initialize color picker
   $('#mainmenu').clickMenu();			// initialize menu
+  $('#widthSlider').bind('')
 
   // bind menu options
   $('#menuClear').bind('click', cpaint.clear);
   $('#menuNew').bind('click', cpaint.clear);
+  $('#clearButton').bind('click', cpaint.clear);
   $('#menuFade').bind('click', cpaint.fade);
   $('#menuUnfade').bind('click', cpaint.unfade);
   $('#menuOpen').bind('click',cpaint.open);
   $('#menuSave').bind('click',cpaint.save);
   $('#toolBar').show();		// when toolbar is initialized, make it visible
+    
+  cpaint.x = 0;
+  cpaint.y = 0;
 }
+
+
+cpaint.selectTool = function(ev) {
+  cpaint.tool = ev.data.tool;         // get tool name
+
+  $('.toolbarCell').each(function(index) { // unselect 
+    $(this).removeClass('selected');       // others
+  });
+
+  var tool = '#' + cpaint.tool + 'Button'; // get ID
+  $(tool).addClass('selected');            // select 
+}
+
 
 /*
  * handle mousedown events
  */
 cpaint.drawStart = function(ev) {
-  var x, y; 				// convert event coords to (0,0) at top left of canvas
-  x = ev.pageX - $(cpaint.canvas).offset().left;
-  y = ev.pageY - $(cpaint.canvas).offset().top;
+    
+  cpaint.x = ev.pageX - $(cpaint.canvas).offset().left;
+  cpaint.y = ev.pageY - $(cpaint.canvas).offset().top;
   ev.preventDefault();
-
-  cpaint.drawing = true;			// go into drawing mode
-  cpaint.oldX = x;
-  cpaint.oldY = y;
-  cpaint.cx.lineWidth = cpaint.lineThickness;
-  cpaint.cx.strokeStyle = cpaint.color;
-  cpaint.imgData = cpaint.cx.getImageData(0, 0, cpaint.canvas.width, cpaint.canvas.height);
-  						// save drawing window contents
-  cpaint.cx.beginPath();			// draw initial point
-  cpaint.cx.moveTo(x-1,y-1);
-  cpaint.cx.lineTo(x,y);
-  cpaint.cx.stroke();
+    
+  switch(cpaint.tool) {
+      case 'marker':
+          cpaint.markerStart();
+          break;
+      case 'line':
+          cpaint.lineStart();
+          break;
+      case 'rect':
+          cpaint.rectStart();
+          break;
+      case 'eraser':
+          cpaint.eraserStart();
+          break;
+  }
+  var x, y; 				// convert event coords to (0,0) at top left of canvas
 }
+
+
 
 /*
  * handle mouseup events
@@ -71,20 +104,53 @@ cpaint.drawEnd = function(ev) {
  * handle mousemove events
  */
 cpaint.draw = function(ev) {
-  var x, y;
-  x = ev.pageX - $(cpaint.canvas).offset().left;
-  y = ev.pageY - $(cpaint.canvas).offset().top;
+  cpaint.x = ev.pageX - $(cpaint.canvas).offset().left;
+  cpaint.y = ev.pageY - $(cpaint.canvas).offset().top;
+  ev.preventDefault();
+    
+    
+  switch(cpaint.tool) {
+      case 'marker':
+          cpaint.marker();
+          break;
+      case 'line':
+          cpaint.line();
+          break;
+      case 'rect':
+          cpaint.rect();
+          break;
+      case 'eraser':
+          cpaint.eraser();
+          break;  
+  }
+  cpaint.oldX = cpaint.x;
+  cpaint.oldY = cpaint.y;
+} 
 
+
+cpaint.markerStart = function() {
+  cpaint.drawing = true;			// go into drawing mode
+  cpaint.oldX = cpaint.x;
+  cpaint.oldY = cpaint.y;
+  cpaint.cx.lineWidth = cpaint.lineThickness;
+  cpaint.cx.strokeStyle = cpaint.color;
+  cpaint.imgData = cpaint.cx.getImageData(0, 0, cpaint.canvas.width, cpaint.canvas.height);
+  						// save drawing window contents
+  cpaint.cx.beginPath();			// draw initial point
+  cpaint.cx.moveTo(cpaint.x-1,cpaint.y-1);
+  cpaint.cx.lineTo(cpaint.x,cpaint.y);
+  cpaint.cx.stroke();
+}
+
+cpaint.marker = function() {
   if (cpaint.drawing) {
     cpaint.cx.beginPath();			// draw initial stroke
     cpaint.cx.moveTo(cpaint.oldX,cpaint.oldY);
-    cpaint.cx.lineTo(x,y);
+    cpaint.cx.lineTo(cpaint.x,cpaint.y);
     cpaint.cx.lineCap = 'round';
     cpaint.cx.stroke();
   }
-  cpaint.oldX = x;
-  cpaint.oldY = y;
-} 
+}
 
 /*
  * clear the canvas, offscreen buffer, and message box

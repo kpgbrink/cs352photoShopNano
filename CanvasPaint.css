@@ -62,15 +62,14 @@ body {
     -moz-box-shadow:2px 2px 2px #666;
 }
 
+#markerButton { background: url(img/paintbrush.png) 
+	 no-repeat center center; }
 
-.toolbarCell:hover {
-    -webkit-box-shadow:-2px -2px 2px #666;
-    -moz-box-shadow:-2px -2px 2px #666;
-}
+.selected { box-shadow: inset 2px 2px 2px #666; }
 
-.toolbarCell:active {
-    border: solid #000 2px;
-}
+.toolbarCell:hover { border:solid #555 2px; }
+
+.toolbarCell:active { border: solid #000 3px; }
 
 #markerButton { 
     background: url(http://cs.calvin.edu/curriculum/cs/352/files/img/paintbrush.png) no-repeat center center; 
